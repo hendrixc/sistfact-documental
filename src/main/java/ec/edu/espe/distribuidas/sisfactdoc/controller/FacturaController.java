@@ -18,7 +18,6 @@ import ec.edu.espe.distribuidas.sisfactdoc.model.Factura;
 import ec.edu.espe.distribuidas.sisfactdoc.model.FacturaDetalle;
 import ec.edu.espe.distribuidas.sisfactdoc.service.FacturaService;
 import ec.edu.espe.distribuidas.sisfactdoc.transform.FacturaRSTransform;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,15 +40,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/factura")
 public class FacturaController {
-    
+
     private final FacturaService facturaService;
 
     public FacturaController(FacturaService facturaService) {
         this.facturaService = facturaService;
     }
-    
+
     @GetMapping(value = "{fechaInicio}/{fechaFin}")
-    public ResponseEntity obtenerFacturasPorFechas(@PathVariable("fechaInicio") String fechaInicio, 
+    public ResponseEntity obtenerFacturasPorFechas(@PathVariable("fechaInicio") String fechaInicio,
             @PathVariable("fechaFin") String fechaFin) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date fechaInicioD;
@@ -68,19 +67,19 @@ public class FacturaController {
         });
         return ResponseEntity.ok(facturasRS);
     }
-    
-    @GetMapping(value= "{numeroAutorizacion}")
+
+    @GetMapping(value = "{numeroAutorizacion}")
     public ResponseEntity obtenerFactura(@PathVariable("numeroAutorizacion") String numeroAutorizacion) {
         log.info("Va a recuperar la factura con numero de autorizacion: {}", numeroAutorizacion);
         Factura factura = this.facturaService.obtenerPorNumeroAutorizacion(numeroAutorizacion);
-        if (factura!=null) {
+        if (factura != null) {
             FacturaRS facturaRS = FacturaRSTransform.buildFacturaRSComplete(factura);
             return ResponseEntity.ok(facturaRS);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @PostMapping
     public ResponseEntity registrar(@RequestBody FacturaRQ facturaRQ) {
         try {
@@ -110,5 +109,3 @@ public class FacturaController {
         }
     }
 }
-
-
